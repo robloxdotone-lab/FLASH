@@ -1,0 +1,6 @@
+{
+  "name": "Flash Crypto",
+  "description": "Minimalist 2026 digital asset terminal with gold branding, liquid glass controls, and instant TRON fee settlement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

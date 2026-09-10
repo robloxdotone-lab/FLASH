@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .font-brand {
+    font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+  }
+  
+  .font-brand-syne {
+    font-family: 'Syne', sans-serif;
+  }
+  
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* 2026 Liquid Glass iOS 27 Aesthetic */
+.liquid-glass-card {
+  background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 75%, rgba(0, 0, 0, 0.4) 100%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 30px 60px -12px rgba(0, 0, 0, 0.65),
+    0 18px 36px -18px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.liquid-glass-input {
+  background: rgba(14, 16, 24, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.5),
+    0 1px 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass-input:focus-within {
+  border-color: rgba(234, 179, 8, 0.5);
+  box-shadow: 
+    0 0 0 3px rgba(234, 179, 8, 0.15),
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Psychological Trust & Security Color Gradients */
+.trust-gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 20%, #38BDF8 48%, #2563EB 80%, #1D4ED8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 20px rgba(56, 189, 248, 0.45));
+}
+
+.trust-glow {
+  box-shadow: 0 0 40px -5px rgba(56, 189, 248, 0.3);
+}
+
+/* Gold Metallic Styling */
+.gold-metallic-text {
+  background: linear-gradient(135deg, #FFF6D1 0%, #F5CE62 25%, #E5A93C 50%, #FFDF88 75%, #CA8A04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 12px rgba(245, 206, 98, 0.35));
+}
+
+.gold-glow {
+  box-shadow: 0 0 35px -5px rgba(234, 179, 8, 0.25);
+}
+
+/* Liquid iOS 27 Button */
+.liquid-glass-ios27-btn {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.25) 100%);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 12px 30px -4px rgba(0, 0, 0, 0.5),
+    0 4px 12px -2px rgba(234, 179, 8, 0.2),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.liquid-glass-ios27-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.08) 25%, 
+    rgba(255, 245, 200, 0.25) 50%, 
+    rgba(255, 255, 255, 0.08) 75%, 
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: 0.75s ease;
+  pointer-events: none;
+}
+
+.liquid-glass-ios27-btn:hover::before {
+  left: 100%;
+}
+
+.liquid-glass-ios27-btn:hover {
+  transform: translateY(-1.5px);
+  border-color: rgba(255, 230, 150, 0.5);
+  box-shadow: 
+    0 18px 40px -4px rgba(0, 0, 0, 0.6),
+    0 8px 24px -2px rgba(234, 179, 8, 0.35),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.liquid-glass-ios27-btn:active {
+  transform: translateY(1px) scale(0.985);
+  box-shadow: 
+    0 6px 16px -2px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+}
