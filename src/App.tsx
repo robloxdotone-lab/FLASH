@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Header } from './components/Header';
+import { FlashLiveStats } from './components/FlashLiveStats';
 import { CryptoOrderForm } from './components/CryptoOrderForm';
 import { FeePaymentView } from './components/FeePaymentView';
 import { OrderState } from './types';
@@ -40,6 +41,9 @@ export default function App() {
       <div className="w-full max-w-4xl mx-auto px-4 py-6 flex-1 flex flex-col items-center">
         {/* Header with Golden FLASH CRYPTO */}
         <Header />
+
+        {/* Real-time FLASH Liquidity Stats & Live Dispatch Feed */}
+        <FlashLiveStats />
 
         {/* Dynamic Views */}
         <main className="w-full flex-1 flex items-center justify-center my-4">

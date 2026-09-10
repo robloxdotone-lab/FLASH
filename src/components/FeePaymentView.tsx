@@ -124,7 +124,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
           <span>Back to Configuration</span>
         </button>
 
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-mono">
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-mono">
           <Clock className="w-3.5 h-3.5 animate-pulse" />
           <span>Session Expires: {formatTimer(timeLeft)}</span>
         </div>
@@ -132,14 +132,14 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
 
       {/* Main Payment Container Card */}
       <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-white/15">
-        {/* Subtle top gold accent bar */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-500/20 via-amber-400 to-amber-500/20" />
+        {/* Subtle top accent bar */}
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400 to-cyan-500/20" />
 
         {/* Active Payment Screen */}
         <div className="space-y-6">
           {/* Header / Notice */}
           <div className="text-center space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
               <ShieldCheck className="w-3.5 h-3.5" />
               Network Fee Required
             </div>
@@ -147,14 +147,14 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
               Transfer Fee to Complete Order
             </h2>
             <p className="text-xs sm:text-sm text-slate-300">
-              Send exactly <span className="font-bold text-amber-300 text-base font-mono">{order.feeAmount} TRX</span> to the TRON network address below.
+              Send exactly <span className="font-bold text-cyan-300 text-base font-mono">{order.feeAmount} TRX</span> to the TRON network address below.
             </p>
           </div>
 
           {/* QR Code and Amount Presentation */}
           <div className="flex flex-col items-center justify-center p-5 rounded-2xl bg-black/40 border border-white/10 relative">
             {/* Glowing QR Box */}
-            <div className="relative p-3 bg-white rounded-2xl shadow-xl shadow-amber-500/5 group">
+            <div className="relative p-3 bg-white rounded-2xl shadow-xl shadow-cyan-500/5 group">
               {qrCodeUrl ? (
                 <img
                   src={qrCodeUrl}
@@ -181,7 +181,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
                   Amount to Send
                 </span>
                 <span className="text-xl font-bold font-mono text-white flex items-center gap-1.5">
-                  {order.feeAmount}.00 <span className="text-amber-400 text-base">TRX</span>
+                  {order.feeAmount}.00 <span className="text-cyan-400 text-base">TRX</span>
                 </span>
               </div>
               <button
@@ -208,7 +208,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs text-slate-300">
               <span className="flex items-center gap-1">
-                <Wallet className="w-3.5 h-3.5 text-amber-400" />
+                <Wallet className="w-3.5 h-3.5 text-cyan-400" />
                 Deposit Address (TRON TRC-20)
               </span>
               <span className="text-[11px] text-emerald-400 font-mono">
@@ -217,13 +217,13 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
             </div>
 
             <div className="liquid-glass-input rounded-2xl p-3.5 flex items-center justify-between gap-3 border border-white/15">
-              <span className="font-mono text-xs sm:text-sm text-amber-300 font-medium break-all select-all">
+              <span className="font-mono text-xs sm:text-sm text-cyan-300 font-medium break-all select-all">
                 {order.feeAddress}
               </span>
               <button
                 type="button"
                 onClick={() => copyToClipboard(order.feeAddress, 'address')}
-                className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 hover:text-amber-200 border border-amber-400/30 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+                className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-200 border border-cyan-400/40 text-xs font-semibold transition-all cursor-pointer shadow-sm"
               >
                 {addressCopied ? (
                   <>
@@ -256,7 +256,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
             </div>
             <div className="flex justify-between text-slate-300">
               <span className="text-slate-400">Fixed Fee:</span>
-              <span className="font-mono text-amber-300 font-bold">{order.feeAmount} TRX</span>
+              <span className="font-mono text-cyan-300 font-bold">{order.feeAmount} TRX</span>
             </div>
             <div className="flex justify-between text-slate-300 border-t border-white/5 pt-2">
               <span className="text-slate-400">Order ID:</span>
@@ -265,8 +265,8 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
           </div>
 
           {/* Warning / Network Advice */}
-          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-200/90 text-xs">
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-200/90 text-xs">
+            <AlertTriangle className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
             <p>
               Please ensure you transfer via the <strong>TRON (TRC-20)</strong> network. 
               Deposits of other assets or sent via different networks cannot be recovered.
@@ -303,10 +303,10 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
 
           {/* Verification Status or Button */}
           {verifying ? (
-            <div className="p-4 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-center space-y-3">
+            <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 text-center space-y-3">
               <div className="flex items-center justify-center gap-3">
-                <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm font-semibold text-amber-300">
+                <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                <span className="text-sm font-semibold text-cyan-300">
                   Scanning TRON Blockchain...
                 </span>
               </div>
@@ -319,12 +319,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
               <LiquidGlassButton
                 id="btn-confirm-trx-payment"
                 onClick={handleVerify}
-                sublabel={
-                  checkCount > 0
-                    ? `Verification Attempt #${checkCount + 1} • Scan Blockchain`
-                    : "Simulated Verification • Scan TRON Blockchain"
-                }
-                icon={<Zap className="w-5 h-5 text-amber-300" />}
+                icon={<Zap className="w-5 h-5 text-cyan-300" />}
               >
                 I Have Sent {order.feeAmount} TRX
               </LiquidGlassButton>

@@ -72,15 +72,15 @@ export const LiquidGlassButton: React.FC<LiquidGlassButtonProps> = ({
 
       {/* Button Content */}
       <div className="flex items-center gap-3 relative z-10">
-        <div className="w-10 h-10 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 shadow-inner group-hover:scale-105 transition-transform duration-300">
-          {icon || <Sparkles className="w-5 h-5 text-amber-300" />}
+        <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shadow-inner group-hover:scale-105 transition-transform duration-300">
+          {icon || <Sparkles className="w-5 h-5 text-cyan-300" />}
         </div>
         <div className="text-left">
           <div className="text-base sm:text-lg font-semibold text-white tracking-wide flex items-center gap-2">
             {children || 'Pay Network Fee'}
           </div>
           {sublabel && (
-            <p className="text-xs text-amber-200/70 font-mono tracking-tight">
+            <p className="text-xs text-cyan-200/70 font-mono tracking-tight">
               {sublabel}
             </p>
           )}
@@ -89,7 +89,7 @@ export const LiquidGlassButton: React.FC<LiquidGlassButtonProps> = ({
 
       {/* Trailing arrow pill */}
       <div className="relative z-10 flex items-center">
-        <div className="w-9 h-9 rounded-full bg-white/10 group-hover:bg-amber-400 group-hover:text-black text-white flex items-center justify-center transition-all duration-300 border border-white/20 group-hover:border-amber-300 shadow-md">
+        <div className="w-9 h-9 rounded-full bg-white/10 group-hover:bg-cyan-400 group-hover:text-slate-950 text-white flex items-center justify-center transition-all duration-300 border border-white/20 group-hover:border-cyan-300 shadow-md">
           {loading ? (
             <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
           ) : (

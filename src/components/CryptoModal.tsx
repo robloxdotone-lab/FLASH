@@ -96,7 +96,7 @@ export const CryptoModal: React.FC<CryptoModalProps> = ({
                       w-full flex items-center justify-between p-3 rounded-2xl text-left transition-all duration-200
                       ${
                         isSelected
-                          ? 'bg-amber-400/10 border border-amber-400/40 shadow-sm'
+                          ? 'bg-cyan-500/15 border border-cyan-400/50 shadow-sm shadow-cyan-500/10'
                           : 'bg-white/[0.02] hover:bg-white/[0.07] border border-white/[0.05] hover:border-white/10'
                       }
                     `}
@@ -116,7 +116,7 @@ export const CryptoModal: React.FC<CryptoModalProps> = ({
                             {crypto.symbol}
                           </span>
                           {crypto.badge && (
-                            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-400/15 text-amber-300 border border-amber-400/30">
+                            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-cyan-400/15 text-cyan-300 border border-cyan-400/30">
                               {crypto.badge}
                             </span>
                           )}
@@ -137,7 +137,7 @@ export const CryptoModal: React.FC<CryptoModalProps> = ({
                         </div>
                       </div>
                       {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-amber-400 text-black flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full bg-cyan-400 text-slate-950 flex items-center justify-center">
                           <Check className="w-3 h-3 stroke-[3]" />
                         </div>
                       )}
