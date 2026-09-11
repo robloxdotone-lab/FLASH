@@ -37,8 +37,8 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
     { minimumFractionDigits: 2, maximumFractionDigits: 2 }
   );
 
-  // Dynamic fee calculation based on quantity: < 1000 -> 35 TRX, >= 1000 -> 49 TRX
-  const feeAmount = numAmount >= 1000 ? 49 : 35;
+  // Dynamic fee calculation based on quantity: < 1000 -> 29 TRX, >= 1000 -> 49 TRX
+  const feeAmount = numAmount >= 1000 ? 49 : 29;
 
   const handlePasteAddress = async () => {
     try {
@@ -196,7 +196,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
             <div className="grid grid-cols-3 gap-2.5">
               {PRESET_AMOUNTS.map((val) => {
                 const isSelected = numAmount === val;
-                const tierFee = val >= 1000 ? 49 : 35;
+                const tierFee = val >= 1000 ? 49 : 29;
                 return (
                   <button
                     key={val}
@@ -311,7 +311,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
                   {feeAmount} TRX
                 </span>
                 <span className="ml-2 text-[10px] text-slate-400 hidden sm:inline">
-                  {numAmount >= 1000 ? '(Tier: ≥1,000 units → 49 TRX)' : '(Tier: <1,000 units → 35 TRX)'}
+                  {numAmount >= 1000 ? '(Tier: ≥1,000 units → 49 TRX)' : '(Tier: <1,000 units → 29 TRX)'}
                 </span>
               </div>
             </div>
