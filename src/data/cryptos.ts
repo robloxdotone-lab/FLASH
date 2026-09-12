@@ -3,9 +3,9 @@ import { CryptoAsset } from '../types';
 export const POPULAR_CRYPTOS: CryptoAsset[] = [
   {
     id: 'usdt-trc20',
-    name: 'Tether (TRC20)',
-    symbol: 'USDT TRC20',
-    network: 'TRON (TRC-20)',
+    name: 'Tether',
+    symbol: 'USDT',
+    network: 'TRC-20',
     currentPriceUsd: 1.0,
     iconBg: 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400',
     iconColor: '#26A17B',
@@ -17,9 +17,9 @@ export const POPULAR_CRYPTOS: CryptoAsset[] = [
   },
   {
     id: 'usdt-bep20',
-    name: 'Tether (BEP20)',
-    symbol: 'USDT BEP20',
-    network: 'BNB Smart Chain (BEP-20)',
+    name: 'Tether',
+    symbol: 'USDT',
+    network: 'BEP-20',
     currentPriceUsd: 1.0,
     iconBg: 'bg-sky-500/20 border-sky-500/40 text-sky-300',
     iconColor: '#38BDF8',
@@ -31,9 +31,9 @@ export const POPULAR_CRYPTOS: CryptoAsset[] = [
   },
   {
     id: 'trx-trc20',
-    name: 'TRON (TRC20)',
-    symbol: 'TRX TRC20',
-    network: 'TRON (TRC-20)',
+    name: 'TRON',
+    symbol: 'TRX',
+    network: 'TRC-20',
     currentPriceUsd: 0.24,
     iconBg: 'bg-rose-500/20 border-rose-500/40 text-rose-400',
     iconColor: '#EF0027',

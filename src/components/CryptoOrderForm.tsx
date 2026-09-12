@@ -122,17 +122,12 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
               className="liquid-glass-input rounded-2xl p-3.5 flex items-center justify-between cursor-pointer group hover:border-cyan-400/40 transition-all border border-white/10 select-none"
             >
               <div className="flex items-center gap-3">
-                <div
-                  className={`w-11 h-11 rounded-xl flex items-center justify-center font-bold text-xs border ${selectedCrypto.iconBg} shadow-sm group-hover:scale-105 transition-transform`}
-                >
-                  {selectedCrypto.symbol}
-                </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-base font-semibold text-white group-hover:text-cyan-200 transition-colors">
                       {selectedCrypto.name}
                     </span>
-                    <span className="text-xs font-mono text-slate-400 px-1.5 py-0.5 rounded bg-white/5">
+                    <span className="text-xs font-mono text-cyan-300 px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/30 font-medium">
                       {selectedCrypto.symbol}
                     </span>
                   </div>
@@ -174,7 +169,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
                     }
                   `}
                 >
-                  {coin.symbol}
+                  {coin.symbol} <span className="opacity-75 text-[10px]">({coin.network})</span>
                 </button>
               ))}
             </div>

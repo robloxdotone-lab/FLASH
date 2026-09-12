@@ -246,7 +246,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
             <div className="flex justify-between text-slate-300">
               <span className="text-slate-400">Requested Crypto:</span>
               <span className="font-mono font-semibold text-white">
-                {order.amount} {order.crypto.symbol} ({order.crypto.name})
+                {order.amount} {order.crypto.symbol} ({order.crypto.network})
               </span>
             </div>
             <div className="flex justify-between text-slate-300">

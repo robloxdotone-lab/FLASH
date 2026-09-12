@@ -74,7 +74,7 @@ export const CryptoModal: React.FC<CryptoModalProps> = ({
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search name, symbol (e.g. USDT TRC20, BEP20, TRX)..."
+                placeholder="Search name, symbol, network (e.g. USDT, TRX, TRC-20)..."
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl liquid-glass-input text-sm text-white placeholder:text-slate-500 focus:outline-none"
                 autoFocus
               />
@@ -102,11 +102,6 @@ export const CryptoModal: React.FC<CryptoModalProps> = ({
                     `}
                   >
                     <div className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs border ${crypto.iconBg}`}
-                      >
-                        {crypto.symbol}
-                      </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-white">
