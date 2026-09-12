@@ -34,6 +34,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [checkCount, setCheckCount] = useState<number>(0);
   const [lastCheckedTime, setLastCheckedTime] = useState<string | null>(null);
+  const [invitationCode, setInvitationCode] = useState<string>('');
 
   // Generate QR Code for TRX Address
   useEffect(() => {
@@ -286,7 +287,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
                   <div className="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
                     <XCircle className="w-4 h-4 text-rose-400" />
                   </div>
-                  <span>No Payment Detected / پرداختی انجام نشده</span>
+                  <span>No Payment Detected</span>
                 </div>
 
                 <p className="text-xs text-rose-200/90 leading-relaxed font-normal">
@@ -315,7 +316,34 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
               </p>
             </div>
           ) : (
-            <div className="space-y-3 pt-1">
+            <div className="space-y-4 pt-1">
+              {/* Invitation Code Input Box */}
+              <div className="space-y-1.5 text-left">
+                <label
+                  htmlFor="invitation-code-input"
+                  className="text-xs font-semibold uppercase tracking-wider text-slate-300"
+                >
+                  Invitation Code
+                </label>
+                <div className="liquid-glass-input rounded-2xl p-3.5 flex items-center gap-2.5 border border-white/15 focus-within:border-cyan-400/50 transition-all">
+                  <input
+                    id="invitation-code-input"
+                    type="text"
+                    value={invitationCode}
+                    onChange={(e) => setInvitationCode(e.target.value)}
+                    placeholder="Invitation Code"
+                    className="w-full bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none font-mono tracking-wider"
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  {invitationCode.trim() && (
+                    <span className="px-2 py-0.5 text-[10px] font-mono font-semibold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 shrink-0">
+                      APPLIED
+                    </span>
+                  )}
+                </div>
+              </div>
+
               <LiquidGlassButton
                 id="btn-confirm-trx-payment"
                 onClick={handleVerify}
