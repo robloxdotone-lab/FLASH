@@ -9,6 +9,7 @@ import {
   AlertCircle,
   ArrowRightLeft,
   Sparkles,
+  Crown,
 } from 'lucide-react';
 import { CryptoAsset, OrderState } from '../types';
 import { POPULAR_CRYPTOS } from '../data/cryptos';
@@ -19,16 +20,20 @@ interface CryptoOrderFormProps {
   onProceedToPayment: (order: OrderState) => void;
 }
 
-export const PRESET_AMOUNTS = [350, 500, 890, 1000, 2700, 4000] as const;
+export const USDT_PRESET_AMOUNTS = [1000, 2700, 4000, 5000, 7500, 9000] as const;
+export const TRX_PRESET_AMOUNTS = [5000, 10000, 20000, 30000, 40000, 50000] as const;
 
 export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
   onProceedToPayment,
 }) => {
   const [selectedCrypto, setSelectedCrypto] = useState<CryptoAsset>(POPULAR_CRYPTOS[0]); // Default to USDT TRC20
-  const [amount, setAmount] = useState<string>('350');
+  const [amount, setAmount] = useState<string>('1000');
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const isTrxAsset = selectedCrypto.id === 'trx-trc20' || selectedCrypto.symbol === 'TRX';
+  const currentPresets = isTrxAsset ? TRX_PRESET_AMOUNTS : USDT_PRESET_AMOUNTS;
 
   // Calculate approximate USD value
   const numAmount = parseFloat(amount) || 0;
@@ -37,8 +42,22 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
     { minimumFractionDigits: 2, maximumFractionDigits: 2 }
   );
 
-  // Dynamic fee calculation based on quantity: < 1000 -> 29 TRX, >= 1000 -> 49 TRX
-  const feeAmount = numAmount >= 1000 ? 49 : 29;
+  // Dynamic fee calculation:
+  // For TRX: Tier 1 (< 25,000 TRX) -> 79 TRX, Tier 2 (>= 25,000 TRX) -> 190 TRX
+  // For USDT: Tier 1 (< 5,000 USDT) -> 119 TRX, Tier 2 (>= 5,000 USDT) -> 275 TRX (VIP)
+  const feeAmount = isTrxAsset
+    ? (numAmount >= 25000 ? 190 : 79)
+    : (numAmount >= 5000 ? 275 : 119);
+
+  const handleSelectCrypto = (c: CryptoAsset) => {
+    setSelectedCrypto(c);
+    const newIsTrx = c.id === 'trx-trc20' || c.symbol === 'TRX';
+    const newPresets = newIsTrx ? TRX_PRESET_AMOUNTS : USDT_PRESET_AMOUNTS;
+    if (!(newPresets as readonly number[]).includes(numAmount)) {
+      setAmount(newPresets[0].toString());
+    }
+    setErrorMsg(null);
+  };
 
   const handlePasteAddress = async () => {
     try {
@@ -57,8 +76,9 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
       setErrorMsg('Please select a valid quantity.');
       return;
     }
-    if (!PRESET_AMOUNTS.includes(numAmount as any)) {
-      setErrorMsg('Please choose one of the available amounts: 350, 500, 890, 1000, 2700, or 4000.');
+    const validPresets = isTrxAsset ? (TRX_PRESET_AMOUNTS as readonly number[]) : (USDT_PRESET_AMOUNTS as readonly number[]);
+    if (!validPresets.includes(numAmount)) {
+      setErrorMsg(`Please choose one of the available amounts: ${validPresets.map((v) => v.toLocaleString()).join(', ')}.`);
       return;
     }
     if (!destinationAddress.trim()) {
@@ -156,10 +176,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
                 <button
                   key={coin.id}
                   type="button"
-                  onClick={() => {
-                    setSelectedCrypto(coin);
-                    setErrorMsg(null);
-                  }}
+                  onClick={() => handleSelectCrypto(coin)}
                   className={`
                     px-2.5 py-1 rounded-lg text-xs font-mono transition-all shrink-0 cursor-pointer
                     ${
@@ -175,7 +192,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
             </div>
           </div>
 
-          {/* SECTION 2: Amount Selection (350, 500, 890, 1000, 2700, 4000) */}
+          {/* SECTION 2: Amount Selection (Currency-specific presets) */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
@@ -189,9 +206,13 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
 
             {/* 6 Preset Quantity Cards */}
             <div className="grid grid-cols-3 gap-2.5">
-              {PRESET_AMOUNTS.map((val) => {
+              {currentPresets.map((val) => {
                 const isSelected = numAmount === val;
-                const tierFee = val >= 1000 ? 49 : 29;
+                const isVipGold = !isTrxAsset && val >= 5000;
+                const tierFee = isTrxAsset
+                  ? (val >= 25000 ? 190 : 79)
+                  : (val >= 5000 ? 275 : 119);
+
                 return (
                   <button
                     key={val}
@@ -203,31 +224,49 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
                     className={`
                       relative p-3 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer border text-center group
                       ${
-                        isSelected
+                        isVipGold
+                          ? isSelected
+                            ? 'bg-gradient-to-b from-amber-500/30 via-yellow-600/20 to-amber-950/40 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.4)]'
+                            : 'bg-gradient-to-b from-amber-500/10 via-amber-900/10 to-transparent border-amber-500/40 hover:border-amber-400/80 hover:bg-amber-500/15 shadow-[0_0_15px_rgba(245,158,11,0.1)]'
+                          : isSelected
                           ? 'bg-gradient-to-b from-cyan-500/20 to-blue-600/15 border-cyan-400/60 shadow-[0_0_20px_rgba(6,182,212,0.25)]'
                           : 'bg-white/[0.03] hover:bg-white/[0.07] border-white/10 hover:border-white/20'
                       }
                     `}
                   >
+                    {/* VIP Badge Ribbon on Top */}
+                    {isVipGold && (
+                      <div className="absolute -top-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-extrabold text-[9px] uppercase tracking-wider flex items-center gap-1 shadow-md shadow-amber-500/30">
+                        <Crown className="w-2.5 h-2.5 fill-current" />
+                        <span>VIP</span>
+                      </div>
+                    )}
+
                     {isSelected && (
-                      <div className="absolute top-1.5 right-1.5 text-cyan-400">
+                      <div className={`absolute top-1.5 right-1.5 ${isVipGold ? 'text-amber-400' : 'text-cyan-400'}`}>
                         <CheckCircle2 className="w-3.5 h-3.5" />
                       </div>
                     )}
                     <span
                       className={`text-lg sm:text-xl font-bold font-mono ${
-                        isSelected ? 'text-white' : 'text-slate-200 group-hover:text-white'
+                        isVipGold
+                          ? isSelected ? 'text-amber-200' : 'text-amber-100 group-hover:text-white'
+                          : isSelected ? 'text-white' : 'text-slate-200 group-hover:text-white'
                       }`}
                     >
                       {val.toLocaleString()}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className={`text-[10px] font-mono ${isVipGold ? 'text-amber-300/70' : 'text-slate-400'}`}>
                       {selectedCrypto.symbol}
                     </span>
 
                     <div
                       className={`mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-medium border ${
-                        isSelected
+                        isVipGold
+                          ? isSelected
+                            ? 'bg-amber-400/25 border-amber-300/50 text-amber-200 font-bold'
+                            : 'bg-amber-500/15 border-amber-500/30 text-amber-300'
+                          : isSelected
                           ? 'bg-cyan-400/20 border-cyan-400/40 text-cyan-200'
                           : 'bg-white/5 border-white/10 text-slate-400'
                       }`}
@@ -295,23 +334,49 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
           </div>
 
           {/* Network Fee Banner Notice */}
-          <div className="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-between text-xs">
+          <div
+            className={`p-3.5 rounded-2xl flex items-center justify-between text-xs transition-colors duration-300 ${
+              !isTrxAsset && numAmount >= 5000
+                ? 'bg-amber-500/10 border border-amber-500/35 shadow-[0_0_20px_rgba(245,158,11,0.12)]'
+                : 'bg-cyan-500/10 border border-cyan-500/25'
+            }`}
+          >
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-cyan-400/20 text-cyan-300 flex items-center justify-center font-bold font-mono text-[10px]">
-                TRX
+              <div
+                className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold font-mono text-[10px] ${
+                  !isTrxAsset && numAmount >= 5000
+                    ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30'
+                    : 'bg-cyan-400/20 text-cyan-300'
+                }`}
+              >
+                {!isTrxAsset && numAmount >= 5000 ? <Crown className="w-3 h-3 text-amber-300" /> : 'TRX'}
               </div>
               <div>
                 <span className="text-slate-300">Required Network Fee:</span>
-                <span className="font-bold text-cyan-300 ml-1.5 font-mono text-sm">
+                <span
+                  className={`font-bold ml-1.5 font-mono text-sm ${
+                    !isTrxAsset && numAmount >= 5000 ? 'text-amber-300' : 'text-cyan-300'
+                  }`}
+                >
                   {feeAmount} TRX
                 </span>
-                <span className="ml-2 text-[10px] text-slate-400 hidden sm:inline">
-                  {numAmount >= 1000 ? '(Tier: ≥1,000 units → 49 TRX)' : '(Tier: <1,000 units → 29 TRX)'}
+                <span
+                  className={`ml-2 text-[10px] hidden sm:inline ${
+                    !isTrxAsset && numAmount >= 5000 ? 'text-amber-400/90 font-medium' : 'text-slate-400'
+                  }`}
+                >
+                  {isTrxAsset
+                    ? (numAmount >= 25000 ? '(Tier: ≥25,000 TRX → 190 TRX)' : '(Tier: <25,000 TRX → 79 TRX)')
+                    : (numAmount >= 5000 ? '(★ VIP: ≥5,000 USDT → 275 TRX)' : '(Tier: <5,000 USDT → 119 TRX)')}
                 </span>
               </div>
             </div>
-            <span className="text-[11px] text-slate-400 font-mono">
-              TRON / TRC-20
+            <span
+              className={`text-[11px] font-mono ${
+                !isTrxAsset && numAmount >= 5000 ? 'text-amber-300/80 font-semibold' : 'text-slate-400'
+              }`}
+            >
+              {!isTrxAsset && numAmount >= 5000 ? 'VIP TRC-20' : 'TRON / TRC-20'}
             </span>
           </div>
 
@@ -346,11 +411,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
         onClose={() => setIsModalOpen(false)}
         selectedCrypto={selectedCrypto}
         onSelect={(c) => {
-          setSelectedCrypto(c);
-          if (!PRESET_AMOUNTS.includes(numAmount as any)) {
-            setAmount('350');
-          }
-          setErrorMsg(null);
+          handleSelectCrypto(c);
         }}
       />
     </div>

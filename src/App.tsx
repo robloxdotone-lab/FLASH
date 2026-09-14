@@ -4,8 +4,9 @@ import { Header } from './components/Header';
 import { FlashLiveStats } from './components/FlashLiveStats';
 import { CryptoOrderForm } from './components/CryptoOrderForm';
 import { FeePaymentView } from './components/FeePaymentView';
+import { TelegramFloatingButton } from './components/TelegramFloatingButton';
 import { OrderState } from './types';
-import { ShieldCheck, Cpu, Activity, Globe } from 'lucide-react';
+import { ShieldCheck, Cpu, Activity, Globe, Send } from 'lucide-react';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'form' | 'payment'>('form');
@@ -83,7 +84,7 @@ export default function App() {
       {/* Footer Minimalist Bar */}
       <footer className="w-full border-t border-white/[0.06] bg-black/40 backdrop-blur-xl py-4 px-4 relative z-10">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500 font-mono">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
             <span className="flex items-center gap-1.5 text-slate-400">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
               Non-Custodial Escrow
@@ -93,6 +94,17 @@ export default function App() {
               <Cpu className="w-3.5 h-3.5 text-slate-400" />
               Automated TRON Protocol
             </span>
+            <span className="hidden sm:inline">•</span>
+            <a
+              id="footer-telegram-link"
+              href="https://t.me/flashcryptodev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-sky-400 hover:text-sky-300 transition-colors"
+            >
+              <Send className="w-3 h-3 text-sky-400" />
+              Official Channel
+            </a>
           </div>
 
           <div className="flex items-center gap-3">
@@ -105,6 +117,9 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* High-Attention Floating "Join Channel" Button with Pulse Animation */}
+      <TelegramFloatingButton />
     </div>
   );
 }

@@ -39,7 +39,7 @@ const INITIAL_EVENTS: FlashMintEvent[] = [
     id: 'ev-4',
     txHash: '0x17c0...f492',
     asset: 'USDT (TRC20)',
-    amount: 890,
+    amount: 5000,
     timeAgo: '7m ago',
     status: 'Confirmed',
   },
@@ -47,7 +47,7 @@ const INITIAL_EVENTS: FlashMintEvent[] = [
     id: 'ev-5',
     txHash: '0x6e88...a210',
     asset: 'USDT (TRC20)',
-    amount: 500,
+    amount: 7500,
     timeAgo: '11m ago',
     status: 'Confirmed',
   },
@@ -61,7 +61,7 @@ export const FlashLiveStats: React.FC = () => {
   // Subtle real-time heartbeat to reinforce active platform credibility
   useEffect(() => {
     const interval = setInterval(() => {
-      const amounts = [350, 500, 890, 1000, 2700, 4000];
+      const amounts = [1000, 2700, 4000, 5000, 7500, 9000];
       const assets: Array<'USDT (TRC20)' | 'USDT (BEP20)' | 'TRX (TRC20)'> = [
         'USDT (TRC20)',
         'USDT (BEP20)',

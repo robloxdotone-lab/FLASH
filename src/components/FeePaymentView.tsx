@@ -15,6 +15,7 @@ import {
   Zap,
   XCircle,
   AlertCircle,
+  Crown,
 } from 'lucide-react';
 import { OrderState } from '../types';
 import { LiquidGlassButton } from './LiquidGlassButton';
@@ -35,6 +36,8 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
   const [checkCount, setCheckCount] = useState<number>(0);
   const [lastCheckedTime, setLastCheckedTime] = useState<string | null>(null);
   const [invitationCode, setInvitationCode] = useState<string>('');
+
+  const isVipOrder = (order.crypto.symbol === 'USDT' || order.crypto.id?.includes('usdt')) && order.feeAmount === 275;
 
   // Generate QR Code for TRX Address
   useEffect(() => {
@@ -132,23 +135,50 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
       </div>
 
       {/* Main Payment Container Card */}
-      <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-white/15">
+      <div
+        className={`liquid-glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden border ${
+          isVipOrder
+            ? 'border-amber-400/40 shadow-[0_0_50px_rgba(245,158,11,0.15)]'
+            : 'border-white/15'
+        }`}
+      >
         {/* Subtle top accent bar */}
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400 to-cyan-500/20" />
+        <div
+          className={`absolute top-0 inset-x-0 h-1.5 ${
+            isVipOrder
+              ? 'bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.8)]'
+              : 'bg-gradient-to-r from-cyan-500/20 via-cyan-400 to-cyan-500/20'
+          }`}
+        />
 
         {/* Active Payment Screen */}
         <div className="space-y-6">
           {/* Header / Notice */}
           <div className="text-center space-y-1.5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              Network Fee Required
-            </div>
+            {isVipOrder ? (
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-yellow-400/20 to-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-sm shadow-amber-500/20">
+                <Crown className="w-3.5 h-3.5 text-amber-400 fill-current" />
+                VIP Liquidity Tier
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                Network Fee Required
+              </div>
+            )}
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-wide">
               Transfer Fee to Complete Order
             </h2>
             <p className="text-xs sm:text-sm text-slate-300">
-              Send exactly <span className="font-bold text-cyan-300 text-base font-mono">{order.feeAmount} TRX</span> to the TRON network address below.
+              Send exactly{' '}
+              <span
+                className={`font-bold text-base font-mono ${
+                  isVipOrder ? 'text-amber-300 font-extrabold' : 'text-cyan-300'
+                }`}
+              >
+                {order.feeAmount} TRX
+              </span>{' '}
+              to the TRON network address below.
             </p>
           </div>
 
@@ -176,13 +206,23 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
             </div>
 
             {/* Exact Deposit Amount Card */}
-            <div className="mt-4 w-full flex items-center justify-between p-3 rounded-xl bg-white/[0.04] border border-white/10">
+            <div
+              className={`mt-4 w-full flex items-center justify-between p-3 rounded-xl border ${
+                isVipOrder
+                  ? 'bg-amber-500/10 border-amber-500/30'
+                  : 'bg-white/[0.04] border border-white/10'
+              }`}
+            >
               <div className="text-left">
-                <span className="text-[11px] text-slate-400 uppercase tracking-wider block">
-                  Amount to Send
+                <span className="text-[11px] text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  {isVipOrder && <Crown className="w-3 h-3 text-amber-400 fill-current" />}
+                  <span>Amount to Send {isVipOrder && '(VIP Discounted)'}</span>
                 </span>
                 <span className="text-xl font-bold font-mono text-white flex items-center gap-1.5">
-                  {order.feeAmount}.00 <span className="text-cyan-400 text-base">TRX</span>
+                  {order.feeAmount}.00{' '}
+                  <span className={`text-base ${isVipOrder ? 'text-amber-400 font-extrabold' : 'text-cyan-400'}`}>
+                    TRX
+                  </span>
                 </span>
               </div>
               <button
@@ -257,7 +297,14 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
             </div>
             <div className="flex justify-between text-slate-300">
               <span className="text-slate-400">Fixed Fee:</span>
-              <span className="font-mono text-cyan-300 font-bold">{order.feeAmount} TRX</span>
+              <span
+                className={`font-mono font-bold flex items-center gap-1.5 ${
+                  isVipOrder ? 'text-amber-300' : 'text-cyan-300'
+                }`}
+              >
+                {isVipOrder && <Crown className="w-3 h-3 text-amber-400 fill-current" />}
+                {order.feeAmount} TRX {isVipOrder && <span className="text-[10px] text-amber-400/80 font-normal">(VIP)</span>}
+              </span>
             </div>
             <div className="flex justify-between text-slate-300 border-t border-white/5 pt-2">
               <span className="text-slate-400">Order ID:</span>
