@@ -19,7 +19,7 @@ interface CryptoOrderFormProps {
   onProceedToPayment: (order: OrderState) => void;
 }
 
-// Calculate dynamic network fee based on user-entered quantity matching existing rates
+// Calculate dynamic network fee based on updated rates: Base Fee 39 TRX + tiered structure
 export function calculateDynamicFee(
   crypto: CryptoAsset,
   amt: number
@@ -28,22 +28,32 @@ export function calculateDynamicFee(
   const isUsdt = crypto.id === 'usdt-trc20' || crypto.symbol === 'USDT';
 
   if (isTrx) {
-    if (amt <= 3000) return { fee: 37, isVip: false };
-    if (amt <= 15000) return { fee: 79, isVip: false };
-    if (amt <= 25000) return { fee: 79, isVip: true };
-    return { fee: 190, isVip: true };
+    if (amt < 5000) {
+      return { fee: 39, isVip: false }; // Base Fee 39 TRX
+    } else if (amt <= 20000) {
+      return { fee: 79, isVip: false }; // 5k, 10k, 20k -> 79 TRX
+    } else {
+      return { fee: 190, isVip: true }; // 30k, 40k, 50k+ -> 190 TRX
+    }
   }
 
   if (isUsdt) {
-    if (amt < 5000) return { fee: 119, isVip: false };
-    return { fee: 275, isVip: true };
+    if (amt <= 1000) return { fee: 39, isVip: false };  // 1,000 USDT -> 39 TRX
+    if (amt <= 2700) return { fee: 59, isVip: false };  // 2,700 USDT -> 59 TRX
+    if (amt <= 4000) return { fee: 79, isVip: false };  // 4,000 USDT -> 79 TRX
+    if (amt <= 5000) return { fee: 99, isVip: false };  // 5,000 USDT -> 99 TRX
+    if (amt <= 7500) return { fee: 149, isVip: true };  // 7,500 USDT -> 149 TRX
+    return { fee: 179, isVip: true };                   // 9,000+ USDT -> 179 TRX
   }
 
   // Generic crypto (BTC, ETH, etc.) based on equivalent USD value
   const usd = amt * (crypto.currentPriceUsd || 1);
-  if (usd < 1000) return { fee: 37, isVip: false };
-  if (usd < 5000) return { fee: 119, isVip: false };
-  return { fee: 275, isVip: true };
+  if (usd <= 1000) return { fee: 39, isVip: false };
+  if (usd <= 2700) return { fee: 59, isVip: false };
+  if (usd <= 4000) return { fee: 79, isVip: false };
+  if (usd <= 5000) return { fee: 99, isVip: false };
+  if (usd <= 7500) return { fee: 149, isVip: true };
+  return { fee: 179, isVip: true };
 }
 
 export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
@@ -211,7 +221,10 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
           {/* Quick preset chips for rapid selection while keeping full freedom */}
           <div className="flex items-center gap-1.5 pt-1 flex-wrap">
             <span className="text-[11px] text-slate-500 font-mono mr-1">Quick:</span>
-            {(isTrxAsset ? [1700, 5000, 10000, 20000, 50000] : [1000, 2700, 5000, 7500, 10000]).map((preset) => (
+            {(isTrxAsset
+              ? [1700, 5000, 10000, 20000, 30000, 50000]
+              : [1000, 2700, 4000, 5000, 7500, 9000]
+            ).map((preset) => (
               <button
                 key={preset}
                 type="button"
