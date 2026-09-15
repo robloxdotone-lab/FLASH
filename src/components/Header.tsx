@@ -1,49 +1,40 @@
 import React from 'react';
-import { ShieldCheck, Lock } from 'lucide-react';
+import { ShieldCheck, Zap, Lock, Sparkles } from 'lucide-react';
 
 export const Header: React.FC = () => {
   return (
-    <header className="w-full flex flex-col items-center justify-center pt-8 pb-5 px-4 relative z-10">
-      {/* Top Trust & Security Status Badge */}
-      <div className="flex items-center justify-center mb-4">
-        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/[0.06] border border-sky-400/20 backdrop-blur-md shadow-sm shadow-sky-500/5">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-          </span>
-          <span className="text-[11px] font-medium tracking-wider text-sky-200 uppercase flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-            Verified Secure Protocol
-          </span>
-          <span className="text-[10px] text-sky-500/60">|</span>
-          <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
-            <Lock className="w-2.5 h-2.5 text-emerald-400" />
-            Bank-Grade 256-bit
-          </span>
-        </div>
+    <header className="w-full flex flex-col items-center justify-center pt-8 pb-4 px-4 relative z-10">
+      {/* Glow ambient background behind header */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-28 bg-gradient-to-r from-cyan-400/20 via-sky-400/25 to-blue-500/20 blur-3xl -z-10 pointer-events-none rounded-full" />
+
+      {/* Trust pill badge */}
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 shadow-xs mb-3 backdrop-blur-md">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+        </span>
+        <span className="text-[11px] font-semibold text-cyan-300 tracking-wide uppercase flex items-center gap-1 font-mono">
+          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+          Automated Flash Node • TRON TRC-20
+        </span>
       </div>
 
-      {/* Modern Trust-Engineered "FLASH CRYPTO" Title */}
-      <div className="relative group text-center select-none">
-        {/* Ambient Psychological Trust Aura (Sapphire & Cyan) */}
-        <div 
-          className="absolute -inset-x-12 -inset-y-6 bg-gradient-to-r from-blue-600/0 via-cyan-500/15 to-blue-500/0 blur-3xl -z-10 pointer-events-none"
-          aria-hidden="true"
-        />
-
-        <h1 className="font-brand text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-[0.08em] sm:tracking-[0.10em] uppercase transition-all duration-300">
-          <span className="trust-gradient-text drop-shadow-[0_4px_24px_rgba(56,189,248,0.4)]">
+      {/* Main Brand Title */}
+      <div className="relative text-center select-none">
+        <h1 className="font-brand text-4xl sm:text-5xl md:text-6xl font-black tracking-[0.08em] uppercase transition-all duration-300">
+          <span className="trust-gradient-text drop-shadow-[0_4px_24px_rgba(6,182,212,0.4)]">
             FLASH CRYPTO
           </span>
         </h1>
 
-        <div className="flex items-center justify-center gap-2.5 mt-2.5">
-          <div className="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-cyan-400/40" />
-          <p className="text-xs sm:text-sm font-normal text-slate-300 tracking-wider flex items-center gap-1.5">
-            <span>Terminal Instant Liquidity ( flash)</span>
-          </p>
-          <div className="h-[1px] w-8 sm:w-16 bg-gradient-to-l from-transparent to-cyan-400/40" />
-        </div>
+        <p className="mt-2 text-xs sm:text-sm font-medium text-slate-400 tracking-wide flex items-center justify-center gap-2 max-w-md mx-auto">
+          <span>High-Frequency Flash Mint Protocol</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-cyan-400 font-semibold flex items-center gap-1">
+            <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+            Zero Slippage Instant Dispatch
+          </span>
+        </p>
       </div>
     </header>
   );

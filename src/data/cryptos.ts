@@ -2,6 +2,20 @@ import { CryptoAsset } from '../types';
 
 export const POPULAR_CRYPTOS: CryptoAsset[] = [
   {
+    id: 'trx-trc20',
+    name: 'TRON',
+    symbol: 'TRX',
+    network: 'TRC-20',
+    currentPriceUsd: 0.24,
+    iconBg: 'bg-rose-500/20 border-rose-500/40 text-rose-400',
+    iconColor: '#EF0027',
+    defaultAmount: '1700',
+    minAmount: 1700,
+    placeholderAddress: 'TWr5K...p9Xz',
+    addressHint: 'Enter TRON wallet address starting with T',
+    badge: 'Native TRON',
+  },
+  {
     id: 'usdt-trc20',
     name: 'Tether',
     symbol: 'USDT',
@@ -28,20 +42,6 @@ export const POPULAR_CRYPTOS: CryptoAsset[] = [
     placeholderAddress: '0x32A...c98B',
     addressHint: 'Enter BSC (BEP-20) address starting with 0x',
     badge: 'BEP-20 Fast',
-  },
-  {
-    id: 'trx-trc20',
-    name: 'TRON',
-    symbol: 'TRX',
-    network: 'TRC-20',
-    currentPriceUsd: 0.24,
-    iconBg: 'bg-rose-500/20 border-rose-500/40 text-rose-400',
-    iconColor: '#EF0027',
-    defaultAmount: '5000',
-    minAmount: 5000,
-    placeholderAddress: 'TWr5K...p9Xz',
-    addressHint: 'Enter TRON wallet address starting with T',
-    badge: 'Native TRON',
   },
 ];
 

@@ -1,21 +1,18 @@
 @import "tailwindcss";
 
 :root, html, body {
-  color-scheme: only light !important;
-  supported-color-schemes: light !important;
+  color-scheme: dark !important;
+  supported-color-schemes: dark !important;
   -webkit-text-size-adjust: 100%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root, html, body, input, select, textarea, button {
-    color-scheme: only light !important;
-    supported-color-schemes: light !important;
-  }
+  background-color: #070a0e;
+  color: #f1f5f9;
 }
 
 @layer base {
   body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #070a0e;
+    color: #f1f5f9;
   }
   
   .font-brand {
@@ -31,71 +28,70 @@
   }
 }
 
-/* 2026 Liquid Glass iOS 27 Aesthetic */
+/* Dark Cyber Luxury Liquid Glass Aesthetic */
 .liquid-glass-card {
-  background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 75%, rgba(0, 0, 0, 0.4) 100%);
+  background: radial-gradient(130% 100% at 50% 0%, rgba(16, 24, 36, 0.92) 0%, rgba(11, 16, 24, 0.95) 75%, rgba(7, 10, 16, 0.98) 100%);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
-    0 30px 60px -12px rgba(0, 0, 0, 0.65),
-    0 18px 36px -18px rgba(0, 0, 0, 0.45),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3);
+    0 24px 48px -12px rgba(0, 0, 0, 0.6),
+    0 10px 24px -10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .liquid-glass-input {
-  background: rgba(14, 16, 24, 0.65);
+  background: rgba(11, 16, 24, 0.85);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(51, 65, 85, 0.5);
   box-shadow: 
-    inset 0 2px 4px 0 rgba(0, 0, 0, 0.5),
-    0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 3px 0 rgba(0, 0, 0, 0.4);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .liquid-glass-input:focus-within {
-  border-color: rgba(6, 182, 212, 0.5);
+  border-color: rgba(6, 182, 212, 0.8);
+  background: rgba(14, 21, 32, 0.95);
   box-shadow: 
-    0 0 0 3px rgba(6, 182, 212, 0.15),
-    inset 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+    0 0 0 3px rgba(6, 182, 212, 0.2),
+    inset 0 1px 3px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* Psychological Trust & Security Color Gradients */
 .trust-gradient-text {
-  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 20%, #38BDF8 48%, #2563EB 80%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #38BDF8 40%, #0284C7 70%, #0EA5E9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 20px rgba(56, 189, 248, 0.45));
+  filter: drop-shadow(0 2px 14px rgba(2, 132, 199, 0.45));
 }
 
 .trust-glow {
-  box-shadow: 0 0 40px -5px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 35px -5px rgba(14, 165, 233, 0.3);
 }
 
 /* Gold Metallic Styling */
 .gold-metallic-text {
-  background: linear-gradient(135deg, #FFF6D1 0%, #F5CE62 25%, #E5A93C 50%, #FFDF88 75%, #CA8A04 100%);
+  background: linear-gradient(135deg, #78350F 0%, #B45309 25%, #D97706 55%, #B45309 85%, #92400E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 12px rgba(245, 206, 98, 0.35));
+  filter: drop-shadow(0 1px 8px rgba(217, 119, 6, 0.2));
 }
 
 .gold-glow {
-  box-shadow: 0 0 35px -5px rgba(234, 179, 8, 0.25);
+  box-shadow: 0 0 30px -5px rgba(217, 119, 6, 0.2);
 }
 
 /* Liquid iOS 27 Button */
 .liquid-glass-ios27-btn {
   position: relative;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.25) 100%);
+  background: linear-gradient(180deg, #0F172A 0%, #1E293B 55%, #0F172A 100%);
   backdrop-filter: blur(30px) saturate(200%);
   -webkit-backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
-    0 12px 30px -4px rgba(0, 0, 0, 0.5),
-    0 4px 12px -2px rgba(6, 182, 212, 0.25),
-    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.6),
+    0 12px 28px -4px rgba(15, 23, 42, 0.28),
+    0 4px 12px -2px rgba(6, 182, 212, 0.2),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -111,9 +107,9 @@
   background: linear-gradient(
     90deg, 
     transparent 0%, 
-    rgba(255, 255, 255, 0.08) 25%, 
+    rgba(255, 255, 255, 0.05) 25%, 
     rgba(186, 230, 253, 0.3) 50%, 
-    rgba(255, 255, 255, 0.08) 75%, 
+    rgba(255, 255, 255, 0.05) 75%, 
     transparent 100%
   );
   transform: skewX(-20deg);
@@ -127,17 +123,17 @@
 
 .liquid-glass-ios27-btn:hover {
   transform: translateY(-1.5px);
-  border-color: rgba(56, 189, 248, 0.5);
+  border-color: rgba(56, 189, 248, 0.6);
   box-shadow: 
-    0 18px 40px -4px rgba(0, 0, 0, 0.6),
-    0 8px 24px -2px rgba(6, 182, 212, 0.35),
-    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.8),
+    0 18px 36px -4px rgba(15, 23, 42, 0.35),
+    0 8px 20px -2px rgba(6, 182, 212, 0.25),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.5),
     inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .liquid-glass-ios27-btn:active {
   transform: translateY(1px) scale(0.985);
   box-shadow: 
-    0 6px 16px -2px rgba(0, 0, 0, 0.4),
+    0 6px 14px -2px rgba(15, 23, 42, 0.3),
     inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
 }

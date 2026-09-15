@@ -37,7 +37,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
   const [lastCheckedTime, setLastCheckedTime] = useState<string | null>(null);
   const [invitationCode, setInvitationCode] = useState<string>('');
 
-  const isVipOrder = (order.crypto.symbol === 'USDT' || order.crypto.id?.includes('usdt')) && order.feeAmount === 275;
+  const isVipOrder = (order.crypto.symbol === 'USDT' || order.crypto.id?.includes('usdt')) && parseFloat(order.amount) >= 5000;
 
   // Generate QR Code for TRX Address
   useEffect(() => {
@@ -122,32 +122,32 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 text-xs sm:text-sm text-slate-400 hover:text-white transition-colors cursor-pointer px-3 py-1.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5"
+          className="flex items-center gap-2 text-xs sm:text-sm text-slate-300 hover:text-white transition-colors cursor-pointer px-3 py-1.5 rounded-xl bg-[#0c1219] hover:bg-[#141d27] border border-slate-800 shadow-xs"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Configuration</span>
         </button>
 
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-mono">
-          <Clock className="w-3.5 h-3.5 animate-pulse" />
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium shadow-xs">
+          <Clock className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
           <span>Session Expires: {formatTimer(timeLeft)}</span>
         </div>
       </div>
 
       {/* Main Payment Container Card */}
       <div
-        className={`liquid-glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden border ${
+        className={`rounded-3xl p-6 sm:p-8 relative overflow-hidden bg-[#090e15]/95 border shadow-2xl ${
           isVipOrder
-            ? 'border-amber-400/40 shadow-[0_0_50px_rgba(245,158,11,0.15)]'
-            : 'border-white/15'
+            ? 'border-amber-500/50 shadow-amber-950/20'
+            : 'border-slate-800 shadow-black/80'
         }`}
       >
         {/* Subtle top accent bar */}
         <div
           className={`absolute top-0 inset-x-0 h-1.5 ${
             isVipOrder
-              ? 'bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.8)]'
-              : 'bg-gradient-to-r from-cyan-500/20 via-cyan-400 to-cyan-500/20'
+              ? 'bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 shadow-sm'
+              : 'bg-gradient-to-r from-cyan-500/30 via-cyan-400 to-cyan-500/30'
           }`}
         />
 
@@ -156,24 +156,24 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
           {/* Header / Notice */}
           <div className="text-center space-y-1.5">
             {isVipOrder ? (
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-yellow-400/20 to-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-sm shadow-amber-500/20">
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-wider shadow-xs">
                 <Crown className="w-3.5 h-3.5 text-amber-400 fill-current" />
                 VIP Liquidity Tier
               </div>
             ) : (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
-                <ShieldCheck className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider font-mono">
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
                 Network Fee Required
               </div>
             )}
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-wide">
               Transfer Fee to Complete Order
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300">
+            <p className="text-xs sm:text-sm text-slate-400">
               Send exactly{' '}
               <span
                 className={`font-bold text-base font-mono ${
-                  isVipOrder ? 'text-amber-300 font-extrabold' : 'text-cyan-300'
+                  isVipOrder ? 'text-amber-400 font-extrabold' : 'text-cyan-400'
                 }`}
               >
                 {order.feeAmount} TRX
@@ -183,9 +183,9 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
           </div>
 
           {/* QR Code and Amount Presentation */}
-          <div className="flex flex-col items-center justify-center p-5 rounded-2xl bg-black/40 border border-white/10 relative">
+          <div className="flex flex-col items-center justify-center p-5 rounded-2xl bg-[#0c1219] border border-slate-800/90 relative shadow-inner">
             {/* Glowing QR Box */}
-            <div className="relative p-3 bg-white rounded-2xl shadow-xl shadow-cyan-500/5 group">
+            <div className="relative p-3 bg-white rounded-2xl shadow-md border border-slate-700/60 group">
               {qrCodeUrl ? (
                 <img
                   src={qrCodeUrl}
@@ -193,7 +193,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
                   className="w-48 h-48 sm:w-56 sm:h-56 object-contain rounded-xl"
                 />
               ) : (
-                <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center bg-slate-900 rounded-xl">
+                <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center bg-slate-100 rounded-xl">
                   <RefreshCw className="w-6 h-6 text-slate-400 animate-spin" />
                 </div>
               )}
@@ -209,12 +209,12 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
             <div
               className={`mt-4 w-full flex items-center justify-between p-3 rounded-xl border ${
                 isVipOrder
-                  ? 'bg-amber-500/10 border-amber-500/30'
-                  : 'bg-white/[0.04] border border-white/10'
+                  ? 'bg-amber-950/40 border-amber-500/40'
+                  : 'bg-[#0a0f16] border-slate-800'
               }`}
             >
               <div className="text-left">
-                <span className="text-[11px] text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                <span className="text-[11px] text-slate-400 uppercase tracking-wider flex items-center gap-1 font-medium">
                   {isVipOrder && <Crown className="w-3 h-3 text-amber-400 fill-current" />}
                   <span>Amount to Send {isVipOrder && '(VIP Discounted)'}</span>
                 </span>
@@ -228,7 +228,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
               <button
                 type="button"
                 onClick={() => copyToClipboard(order.feeAmount.toString(), 'amount')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-slate-200 hover:text-white transition-colors cursor-pointer border border-white/10"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#141d27] hover:bg-[#1a2533] text-xs text-slate-300 hover:text-white font-medium transition-colors cursor-pointer border border-slate-700/60"
               >
                 {amountCopied ? (
                   <>
@@ -247,24 +247,24 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
 
           {/* Recipient Address Box */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs text-slate-300">
-              <span className="flex items-center gap-1">
+            <div className="flex items-center justify-between text-xs text-slate-400">
+              <span className="flex items-center gap-1 font-semibold text-cyan-400">
                 <Wallet className="w-3.5 h-3.5 text-cyan-400" />
                 Deposit Address (TRON TRC-20)
               </span>
-              <span className="text-[11px] text-emerald-400 font-mono">
+              <span className="text-[11px] text-emerald-400 font-mono font-medium">
                 Network: TRON / TRC-20
               </span>
             </div>
 
-            <div className="liquid-glass-input rounded-2xl p-3.5 flex items-center justify-between gap-3 border border-white/15">
-              <span className="font-mono text-xs sm:text-sm text-cyan-300 font-medium break-all select-all">
+            <div className="rounded-2xl p-3.5 flex items-center justify-between gap-3 bg-[#0a0f16] border border-slate-800 shadow-inner">
+              <span className="font-mono text-xs sm:text-sm text-cyan-300 font-semibold break-all select-all">
                 {order.feeAddress}
               </span>
               <button
                 type="button"
                 onClick={() => copyToClipboard(order.feeAddress, 'address')}
-                className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-200 border border-cyan-400/40 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+                className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-950/80 hover:bg-cyan-900/80 text-cyan-300 hover:text-cyan-200 border border-cyan-500/40 text-xs font-bold transition-all cursor-pointer shadow-xs"
               >
                 {addressCopied ? (
                   <>
@@ -282,16 +282,16 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
           </div>
 
           {/* Order Summary Pill Box */}
-          <div className="rounded-2xl bg-white/[0.02] border border-white/5 p-4 space-y-2 text-xs">
+          <div className="rounded-2xl bg-[#0c1219] border border-slate-800/90 p-4 space-y-2 text-xs">
             <div className="flex justify-between text-slate-300">
               <span className="text-slate-400">Requested Crypto:</span>
-              <span className="font-mono font-semibold text-white">
+              <span className="font-mono font-bold text-white">
                 {order.amount} {order.crypto.symbol} ({order.crypto.network})
               </span>
             </div>
             <div className="flex justify-between text-slate-300">
               <span className="text-slate-400">Target Wallet:</span>
-              <span className="font-mono text-slate-200 truncate max-w-[200px]" title={order.destinationAddress}>
+              <span className="font-mono text-slate-300 truncate max-w-[200px]" title={order.destinationAddress}>
                 {order.destinationAddress}
               </span>
             </div>
@@ -299,24 +299,24 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
               <span className="text-slate-400">Fixed Fee:</span>
               <span
                 className={`font-mono font-bold flex items-center gap-1.5 ${
-                  isVipOrder ? 'text-amber-300' : 'text-cyan-300'
+                  isVipOrder ? 'text-amber-400' : 'text-cyan-400'
                 }`}
               >
                 {isVipOrder && <Crown className="w-3 h-3 text-amber-400 fill-current" />}
-                {order.feeAmount} TRX {isVipOrder && <span className="text-[10px] text-amber-400/80 font-normal">(VIP)</span>}
+                {order.feeAmount} TRX {isVipOrder && <span className="text-[10px] text-amber-400 font-bold">(VIP)</span>}
               </span>
             </div>
-            <div className="flex justify-between text-slate-300 border-t border-white/5 pt-2">
-              <span className="text-slate-400">Order ID:</span>
+            <div className="flex justify-between text-slate-400 border-t border-slate-800 pt-2">
+              <span className="text-slate-500">Order ID:</span>
               <span className="font-mono text-slate-400">{order.orderId}</span>
             </div>
           </div>
 
           {/* Warning / Network Advice */}
-          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-200/90 text-xs">
-            <AlertTriangle className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#0a1622] border border-cyan-800/40 text-cyan-200 text-xs">
+            <AlertTriangle className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
             <p>
-              Please ensure you transfer via the <strong>TRON (TRC-20)</strong> network. 
+              Please ensure you transfer via the <strong className="text-white">TRON (TRC-20)</strong> network. 
               Deposits of other assets or sent via different networks cannot be recovered.
             </p>
           </div>
@@ -328,20 +328,20 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
                 initial={{ opacity: 0, y: -10, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                className="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/35 backdrop-blur-md shadow-lg shadow-rose-950/40 text-left space-y-2.5"
+                className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800/60 text-left space-y-2.5 shadow-sm"
               >
-                <div className="flex items-center gap-2.5 text-rose-300 font-semibold text-sm">
-                  <div className="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
+                <div className="flex items-center gap-2.5 text-rose-300 font-bold text-sm">
+                  <div className="w-6 h-6 rounded-lg bg-rose-900/60 border border-rose-700/60 flex items-center justify-center shrink-0">
                     <XCircle className="w-4 h-4 text-rose-400" />
                   </div>
                   <span>No Payment Detected</span>
                 </div>
 
-                <p className="text-xs text-rose-200/90 leading-relaxed font-normal">
+                <p className="text-xs text-rose-300 leading-relaxed font-medium">
                   {errorMessage}
                 </p>
 
-                <div className="pt-1.5 border-t border-rose-500/20 flex items-center justify-between text-[11px] font-mono text-rose-300/75">
+                <div className="pt-1.5 border-t border-rose-900/60 flex items-center justify-between text-[11px] font-mono text-rose-400">
                   <span>TRON Nodes Checked: 19/19</span>
                   {lastCheckedTime && <span>Last scan: {lastCheckedTime}</span>}
                 </div>
@@ -351,14 +351,14 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
 
           {/* Verification Status or Button */}
           {verifying ? (
-            <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 text-center space-y-3">
+            <div className="p-4 rounded-2xl bg-cyan-950/40 border border-cyan-800/60 text-center space-y-3">
               <div className="flex items-center justify-center gap-3">
                 <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm font-semibold text-cyan-300">
+                <span className="text-sm font-bold text-cyan-300">
                   Scanning TRON Blockchain...
                 </span>
               </div>
-              <p className="text-xs font-mono text-slate-300 animate-pulse">
+              <p className="text-xs font-mono text-slate-400 animate-pulse">
                 {verificationStep}
               </p>
             </div>
@@ -368,11 +368,11 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
               <div className="space-y-1.5 text-left">
                 <label
                   htmlFor="invitation-code-input"
-                  className="text-xs font-semibold uppercase tracking-wider text-slate-300"
+                  className="text-xs font-bold uppercase tracking-wider text-slate-300"
                 >
                   Invitation Code
                 </label>
-                <div className="liquid-glass-input rounded-2xl p-3.5 flex items-center gap-2.5 border border-white/15 focus-within:border-cyan-400/50 transition-all">
+                <div className="rounded-2xl p-3.5 flex items-center gap-2.5 bg-[#0a0f16] border border-slate-800 focus-within:border-cyan-500 transition-all shadow-inner">
                   <input
                     id="invitation-code-input"
                     type="text"
@@ -384,7 +384,7 @@ export const FeePaymentView: React.FC<FeePaymentViewProps> = ({ order, onBack })
                     spellCheck={false}
                   />
                   {invitationCode.trim() && (
-                    <span className="px-2 py-0.5 text-[10px] font-mono font-semibold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 shrink-0">
+                    <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-950 text-cyan-400 border border-cyan-500/40 shrink-0">
                       APPLIED
                     </span>
                   )}
