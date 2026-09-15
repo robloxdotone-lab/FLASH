@@ -19,46 +19,54 @@ interface CryptoOrderFormProps {
   onProceedToPayment: (order: OrderState) => void;
 }
 
-// Exactly matching the screenshot fees: 1,000, 2,700, 4,000 -> 119 TRX; 5,000, 7,500, 9,000 -> 275 TRX (VIP)
-export const USDT_TIERS = [
-  { amount: 1000, fee: 119, label: '1,000', isVip: false },
-  { amount: 2700, fee: 119, label: '2,700', isVip: false },
-  { amount: 4000, fee: 119, label: '4,000', isVip: false },
-  { amount: 5000, fee: 275, label: '5,000', isVip: true },
-  { amount: 7500, fee: 275, label: '7,500', isVip: true },
-  { amount: 9000, fee: 275, label: '9,000', isVip: true },
-];
+// Calculate dynamic network fee based on user-entered quantity matching existing rates
+export function calculateDynamicFee(
+  crypto: CryptoAsset,
+  amt: number
+): { fee: number; isVip: boolean } {
+  const isTrx = crypto.id === 'trx-trc20' || crypto.symbol === 'TRX';
+  const isUsdt = crypto.id === 'usdt-trc20' || crypto.symbol === 'USDT';
 
-export const TRX_TIERS = [
-  { amount: 1700, fee: 37, label: '1,700', isVip: false },
-  { amount: 5000, fee: 79, label: '5,000', isVip: false },
-  { amount: 10000, fee: 79, label: '10,000', isVip: false },
-  { amount: 20000, fee: 79, label: '20,000', isVip: true },
-  { amount: 30000, fee: 190, label: '30,000', isVip: true },
-  { amount: 50000, fee: 190, label: '50,000', isVip: true },
-];
+  if (isTrx) {
+    if (amt <= 3000) return { fee: 37, isVip: false };
+    if (amt <= 15000) return { fee: 79, isVip: false };
+    if (amt <= 25000) return { fee: 79, isVip: true };
+    return { fee: 190, isVip: true };
+  }
+
+  if (isUsdt) {
+    if (amt < 5000) return { fee: 119, isVip: false };
+    return { fee: 275, isVip: true };
+  }
+
+  // Generic crypto (BTC, ETH, etc.) based on equivalent USD value
+  const usd = amt * (crypto.currentPriceUsd || 1);
+  if (usd < 1000) return { fee: 37, isVip: false };
+  if (usd < 5000) return { fee: 119, isVip: false };
+  return { fee: 275, isVip: true };
+}
 
 export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
   onProceedToPayment,
 }) => {
   const [selectedCrypto, setSelectedCrypto] = useState<CryptoAsset>(
-    () => POPULAR_CRYPTOS.find((c) => c.id === 'usdt-trc20') || POPULAR_CRYPTOS[0]
+    () => POPULAR_CRYPTOS.find((c) => c.id === 'trx-trc20') || POPULAR_CRYPTOS[0]
   );
-  const [selectedAmount, setSelectedAmount] = useState<number>(1000);
+  const [amountInput, setAmountInput] = useState<string>('1700');
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const isTrxAsset = selectedCrypto.id === 'trx-trc20' || selectedCrypto.symbol === 'TRX';
-  const availableTiers = isTrxAsset ? TRX_TIERS : USDT_TIERS;
+  const numericAmount = parseFloat(amountInput) || 0;
 
-  // Selected tier fee calculation
-  const currentTier =
-    availableTiers.find((t) => t.amount === selectedAmount) || availableTiers[0];
-  const feeAmount = currentTier.fee;
-  const isVipTier = currentTier.isVip;
+  // Real-time fee calculation according to existing rates
+  const { fee: feeAmount, isVip: isVipTier } = calculateDynamicFee(
+    selectedCrypto,
+    numericAmount
+  );
 
-  const approxUsd = (selectedAmount * selectedCrypto.currentPriceUsd).toLocaleString(
+  const approxUsd = (numericAmount * selectedCrypto.currentPriceUsd).toLocaleString(
     undefined,
     { minimumFractionDigits: 2, maximumFractionDigits: 2 }
   );
@@ -66,7 +74,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
   const handleSelectCrypto = (c: CryptoAsset) => {
     setSelectedCrypto(c);
     const newIsTrx = c.id === 'trx-trc20' || c.symbol === 'TRX';
-    setSelectedAmount(newIsTrx ? 1700 : 1000);
+    setAmountInput(newIsTrx ? '1700' : '1000');
     setErrorMsg(null);
   };
 
@@ -83,6 +91,10 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
   };
 
   const handleSubmit = () => {
+    if (!numericAmount || numericAmount <= 0) {
+      setErrorMsg('Please enter a valid amount.');
+      return;
+    }
     if (!destinationAddress.trim()) {
       setErrorMsg('Please enter a destination wallet address.');
       return;
@@ -97,7 +109,7 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
     const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
     const order: OrderState = {
       crypto: selectedCrypto,
-      amount: selectedAmount.toString(),
+      amount: numericAmount.toLocaleString(),
       destinationAddress: destinationAddress.trim(),
       feeAmount: feeAmount,
       feeCrypto: 'TRX',
@@ -162,99 +174,61 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
           </div>
         </div>
 
-        {/* QUANTITY HEADER */}
-        <div className="flex items-center justify-between pt-1">
-          <div className="flex items-center gap-2 text-cyan-400 font-black text-xs sm:text-sm tracking-wider uppercase">
-            <ArrowLeftRight className="w-4 h-4 text-cyan-400" />
-            <span>SELECT QUANTITY / AMOUNT</span>
+        {/* CUSTOM QUANTITY / AMOUNT INPUT */}
+        <div className="space-y-1.5 pt-1">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="custom-amount-input"
+              className="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider"
+            >
+              <ArrowLeftRight className="w-4 h-4 text-cyan-400" />
+              <span>ENTER QUANTITY / AMOUNT</span>
+            </label>
+            <div className="text-xs font-mono text-slate-400">
+              ≈ ${approxUsd} USD
+            </div>
           </div>
-          <div className="text-xs font-mono text-slate-400">
-            ≈ ${approxUsd} USD
-          </div>
-        </div>
 
-        {/* 6 TIERS (2 ROWS × 3 COLS) */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
-          {availableTiers.map((tier) => {
-            const isSelected = selectedAmount === tier.amount;
-            return (
+          <div className="p-3 px-3.5 rounded-2xl bg-[#0a0f16] border border-slate-800/90 focus-within:border-cyan-500/80 flex items-center justify-between gap-3 shadow-inner">
+            <input
+              id="custom-amount-input"
+              type="number"
+              min="1"
+              step="any"
+              value={amountInput}
+              onChange={(e) => {
+                setAmountInput(e.target.value);
+                setErrorMsg(null);
+              }}
+              placeholder={isTrxAsset ? '1700' : '1000'}
+              className="w-full bg-transparent text-xl sm:text-2xl font-black font-mono text-white placeholder:text-slate-600 focus:outline-none tracking-tight"
+            />
+            <div className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141d27] border border-slate-700/60 text-cyan-300 font-mono font-black text-xs sm:text-sm">
+              {selectedCrypto.symbol}
+            </div>
+          </div>
+
+          {/* Quick preset chips for rapid selection while keeping full freedom */}
+          <div className="flex items-center gap-1.5 pt-1 flex-wrap">
+            <span className="text-[11px] text-slate-500 font-mono mr-1">Quick:</span>
+            {(isTrxAsset ? [1700, 5000, 10000, 20000, 50000] : [1000, 2700, 5000, 7500, 10000]).map((preset) => (
               <button
-                key={tier.amount}
+                key={preset}
                 type="button"
                 onClick={() => {
-                  setSelectedAmount(tier.amount);
+                  setAmountInput(preset.toString());
                   setErrorMsg(null);
                 }}
-                className={`
-                  relative rounded-2xl p-3 text-center transition-all cursor-pointer flex flex-col justify-between select-none
-                  ${
-                    isSelected
-                      ? tier.isVip
-                        ? 'border-2 border-amber-400 bg-gradient-to-b from-[#241a0b] to-[#120d06] shadow-[0_0_20px_rgba(245,158,11,0.4)]'
-                        : 'border-2 border-cyan-400 bg-gradient-to-b from-[#0b1c2b] to-[#08131e] shadow-[0_0_20px_rgba(6,182,212,0.35)]'
-                      : tier.isVip
-                      ? 'border border-amber-500/35 bg-gradient-to-b from-[#18120a] to-[#0e0c08] hover:border-amber-500/60'
-                      : 'border border-slate-800/90 bg-[#0c1219] hover:border-slate-700'
-                  }
-                `}
+                className={`px-2.5 py-1 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
+                  numericAmount === preset
+                    ? 'bg-cyan-950/70 text-cyan-300 border border-cyan-500/50'
+                    : 'bg-[#0c1219] text-slate-400 border border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                }`}
               >
-                {/* Top Right Checkmark Badge when Selected */}
-                {isSelected && (
-                  <div
-                    className={`absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center text-black shadow-xs ${
-                      tier.isVip ? 'bg-amber-400' : 'bg-cyan-400'
-                    }`}
-                  >
-                    <Check className="w-2.5 h-2.5 stroke-[3.5]" />
-                  </div>
-                )}
-
-                {/* VIP Badge Header for Row 2 */}
-                {tier.isVip ? (
-                  <div className="mx-auto w-fit mb-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-black font-black text-[9px] flex items-center gap-1 uppercase tracking-wider shadow-sm">
-                    <Crown className="w-2.5 h-2.5 fill-current" /> VIP
-                  </div>
-                ) : (
-                  <div className="h-4" />
-                )}
-
-                {/* Quantity */}
-                <div>
-                  <div className="text-xl sm:text-2xl font-black font-mono text-white tracking-tight">
-                    {tier.label}
-                  </div>
-                  <div className="text-[10px] text-slate-400 font-semibold tracking-wider mt-0.5">
-                    {selectedCrypto.symbol}
-                  </div>
-                </div>
-
-                {/* Fee Sub-box */}
-                <div
-                  className={`mt-2 py-1 px-1.5 rounded-xl text-center text-[11px] font-mono font-bold border transition-colors ${
-                    isSelected
-                      ? tier.isVip
-                        ? 'bg-amber-950/60 text-amber-300 border-amber-500/40'
-                        : 'bg-[#0c1c28] text-cyan-300 border-cyan-800/60'
-                      : tier.isVip
-                      ? 'bg-[#201407] text-amber-400 border-amber-500/30'
-                      : 'bg-[#121820] text-slate-400 border-slate-800'
-                  }`}
-                >
-                  Fee: {tier.fee} TRX
-                </div>
+                {preset.toLocaleString()}
               </button>
-            );
-          })}
-        </div>
-
-        {/* SELECTED SUMMARY BAR */}
-        <div className="p-2.5 sm:p-3 rounded-2xl bg-[#0a0f16] border border-slate-800/90 text-center text-xs flex items-center justify-center gap-2 font-mono flex-wrap">
-          <span className="text-slate-400">Selected:</span>
-          <span className="text-white font-black">
-            {selectedAmount.toLocaleString()} {selectedCrypto.symbol}
-          </span>
-          <span className="text-slate-500 ml-2">Network Fee:</span>
-          <span className="text-cyan-400 font-black">{feeAmount} TRX</span>
+            ))}
+          </div>
         </div>
 
         {/* DESTINATION WALLET ADDRESS */}
@@ -288,23 +262,53 @@ export const CryptoOrderForm: React.FC<CryptoOrderFormProps> = ({
         </div>
 
         {/* REQUIRED NETWORK FEE CARD */}
-        <div className="rounded-2xl p-3 px-4 bg-gradient-to-r from-[#091520] to-[#0b1219] border border-cyan-800/60 flex items-center justify-between shadow-md">
+        <div
+          className={`rounded-2xl p-3 px-4 border flex items-center justify-between shadow-md transition-all ${
+            isVipTier
+              ? 'bg-gradient-to-r from-[#1b140a] to-[#0c0905] border-amber-500/50 shadow-[0_0_16px_rgba(245,158,11,0.2)]'
+              : 'bg-gradient-to-r from-[#091520] to-[#0b1219] border-cyan-800/60'
+          }`}
+        >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-xs font-black text-cyan-400 font-mono">
-              TRX
+            <div
+              className={`w-10 h-10 rounded-xl border flex items-center justify-center font-black font-mono ${
+                isVipTier
+                  ? 'bg-amber-950/80 border-amber-500/50 text-amber-400'
+                  : 'bg-cyan-950/80 border-cyan-500/40 text-cyan-400 text-xs'
+              }`}
+            >
+              {isVipTier ? <Crown className="w-5 h-5 fill-current" /> : 'TRX'}
             </div>
             <div>
-              <div className="text-[11px] text-slate-400">Required Network Fee:</div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-xl font-black font-mono text-cyan-400">
+              <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                <span>Required Network Fee:</span>
+                {isVipTier && (
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-400 text-black uppercase tracking-wider">
+                    VIP Tier
+                  </span>
+                )}
+              </div>
+              <div className="flex items-baseline gap-1.5 mt-0.5">
+                <span
+                  className={`text-2xl font-black font-mono ${
+                    isVipTier ? 'text-amber-400' : 'text-cyan-400'
+                  }`}
+                >
                   {feeAmount}
                 </span>
-                <span className="text-xs font-bold text-cyan-400 font-mono">TRX</span>
+                <span
+                  className={`text-xs font-bold font-mono ${
+                    isVipTier ? 'text-amber-400' : 'text-cyan-400'
+                  }`}
+                >
+                  TRX
+                </span>
               </div>
             </div>
           </div>
           <div className="text-right text-[11px] text-slate-500 font-mono">
-            TRON / TRC-20
+            <div>TRON / TRC-20</div>
+            <div className="text-[10px] text-slate-600 mt-0.5">Dynamic Fee</div>
           </div>
         </div>
 
